@@ -77,9 +77,12 @@ elif model_name =="resnet18_224":
     model.fc = torch.nn.Linear(model.fc.in_features,17)
     model = torch.nn.DataParallel(model)
 elif model_name =="resnet50_224":
-    from torchvision.models import resnet50
+    # from torchvision.models import resnet50
+    # model=resnet50(pretrained=True)
+    from models.dilate_resnet import dilate_resnet50
+    model=dilate_resnet50(17)
+
     resume="/media/hszc/model/detao/models/lcz42/resnet50_224_input/best_weigths_[0.0001].pth"
-    model=resnet50(pretrained=True)
     model.conv1 = torch.nn.Conv2d(10, 64, kernel_size=7, stride=1, padding=3,
                                bias=False)
     model.avgpool = torch.nn.AdaptiveAvgPool2d(output_size=1)
