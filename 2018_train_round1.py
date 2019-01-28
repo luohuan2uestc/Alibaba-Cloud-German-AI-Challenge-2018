@@ -15,19 +15,21 @@ from dataset.data_aug import *
 import sys
 import argparse
 from torchvision.models import resnet18,resnet50,resnet101
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--batch_size', type=int, default=32, help='size of each image batch')
+parser.add_argument('--batch_size', type=int, default=128, help='size of each image batch')
 
-parser.add_argument('--learning_rate', type=float, default=0.0001, help='learning rate')
+parser.add_argument('--learning_rate', type=float, default=0.001, help='learning rate')
 parser.add_argument('--data_path', type=str, default= "/home/detao/Desktop/pytorch_classification/data_shuffle_10000.npy", help='whether to img root')
-parser.add_argument('--checkpoint_dir', type=str, default='/media/hszc/model/detao/models/lcz42/resnet101_224_input', help='directory where model checkpoints are saved')
+parser.add_argument('--checkpoint_dir', type=str, default='/media/hszc/model/detao/models/lcz42/resnet101_128', help='directory where model checkpoints are saved')
 parser.add_argument('--cuda_device', type=str, default="0,2,3", help='whether to use cuda if available')
-parser.add_argument('--net', dest='net',type=str, default='resnet50',help='resnet101,resnet50')
+parser.add_argument('--net', dest='net',type=str, default='resnet101',help='resnet101,resnet50')
 # parser.add_argument('--resume', type=str, default="/media/hszc/model/detao/models/lcz42/dla34_lcs/best_weigths_[0.001].pth", help='path to resume weights file')
-parser.add_argument('--resume', type=str, default="/media/hszc/model/detao/models/lcz42/resnet101_224_input/best_weigths_[0.001].pth", help='path to resume weights file')
+# parser.add_argument('--resume', type=str, default="/media/hszc/model/detao/models/lcz42/resnet50_val_train/best_weigths_[0.0001].pth", help='path to resume weights file')
+parser.add_argument('--resume', type=str, default=None, help='path to resume weights file')
 
 parser.add_argument('--epochs', type=int, default=90, help='number of epochs')
 parser.add_argument('--start_epoch', type=int, default=0, help='number of start epoch')
@@ -118,7 +120,7 @@ if __name__ == '__main__':
 
     optimizer = optim.SGD(model.parameters(), lr=opt.learning_rate, momentum=0.9, weight_decay=1e-5)
     criterion = CrossEntropyLoss()
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=40, gamma=0.1)
 
     train(model,
           epoch_num=opt.epochs,
